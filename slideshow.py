@@ -1,6 +1,7 @@
 # To change this license header, choose License Headers in Project Properties.
 # To change this template file, choose Tools | Templates
 # and open the template in the editor.
+import subprocess
 
 __author__="lbillon"
 __date__ ="$Jan 29, 2014 11:44:13 AM$"
@@ -16,7 +17,7 @@ class Slideshow(object):
     DISPLAYEVENT=pygame.USEREVENT + 1
     rq = deque('',10)
     fq = deque('',10)
-
+    screen_on=True
 
     def __init__(self,q):
         logging.info('Slideshow initialization...')    
@@ -39,12 +40,14 @@ class Slideshow(object):
                 if event.type == pygame.QUIT:
                     return False
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        return False
+                    if event.key == pygame.K_TAB:
+                        return False                
                     if event.key == pygame.K_RIGHT:
                         self.next_image()
                     if event.key == pygame.K_LEFT:
                         self.prev_image()
+                    if event.key == pygame.K_SPACE:
+                        self.toggle_screen()
 
                 elif (event.type == pygame.USEREVENT+1):
                     self.next_image()
@@ -74,6 +77,17 @@ class Slideshow(object):
             logging.info('Got prev image')  
         except IndexError:
             logging.info('No prev image')
-        
+
+    def toggle_screen(self):
+        if(self.screen_on):
+            subprocess.call([ "/usr/sbin/vbetool","dpms","off"])
+            pygame.time.set_timer(self.DISPLAYEVENT, 0)
+        else:
+            subprocess.call([ "/usr/sbin/vbetool","dpms","on"])
+            pygame.time.set_timer(self.DISPLAYEVENT, 6000)
+        self.screen_on= not self.screen_on
+
+
+
     def run(self):
         pass
