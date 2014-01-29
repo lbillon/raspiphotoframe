@@ -10,6 +10,7 @@ from collections import deque
 import pygame
 import logging
 from time import gmtime, strftime
+import platform
 
 class Slideshow(object):
     
@@ -41,7 +42,7 @@ class Slideshow(object):
                     return False
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_TAB:
-                        return False                
+                        return False
                     if event.key == pygame.K_RIGHT:
                         self.next_image()
                     if event.key == pygame.K_LEFT:
@@ -80,13 +81,30 @@ class Slideshow(object):
 
     def toggle_screen(self):
         if(self.screen_on):
-            subprocess.call([ "/usr/sbin/vbetool","dpms","off"])
-            pygame.time.set_timer(self.DISPLAYEVENT, 0)
+            self.turn_screen_off()
         else:
-            subprocess.call([ "/usr/sbin/vbetool","dpms","on"])
-            pygame.time.set_timer(self.DISPLAYEVENT, 6000)
+            self.turn_screen_on()
         self.screen_on= not self.screen_on
 
+    def turn_screen_on(self):
+        try:
+            if(platform.machine().startswith('arm')):
+                pass    #TODO: Doesn't work
+            else:
+                subprocess.call([ "/usr/sbin/vbetool","dpms","off"])
+            pygame.time.set_timer(self.DISPLAYEVENT, 6000)
+        except:
+            logging.error("Unable to turn screen on")
+
+    def turn_screen_off(self):
+        try:
+            if(platform.machine().startswith('arm')):
+                pass    #TODO: Doesn't work
+            else:
+                subprocess.call([ "/usr/sbin/vbetool","dpms","off"])
+            pygame.time.set_timer(self.DISPLAYEVENT, 0)
+        except:
+            logging.error("Unable to turn screen off")
 
 
     def run(self):
