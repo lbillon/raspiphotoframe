@@ -21,8 +21,8 @@ class Slideshow(object):
     def __init__(self,q):
         logging.info('Slideshow initialization...')    
         pygame.init()
-        
-        pygame.time.set_timer(self.DISPLAYEVENT, 10000)
+        pygame.mouse.set_visible(False)
+        pygame.time.set_timer(self.DISPLAYEVENT, 6000)
         self.screen = pygame.display.set_mode((0,0),pygame.FULLSCREEN ) 
         
         pygame.event.set_allowed(None)
@@ -50,7 +50,7 @@ class Slideshow(object):
                     self.next_image()
 
             self.screen.blit(self.cs,(0,0))
-            tim=strftime("%H:%M", gmtime())
+            tim=strftime("%H:%M")
             font = pygame.font.SysFont("freesans", 50)
             label = font.render(tim, 1, (255,255,255))
             self.screen.blit(label, (1920-label.get_width()-10,1080-label.get_height()-10))
