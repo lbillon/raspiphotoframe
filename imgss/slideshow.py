@@ -22,7 +22,7 @@ class Slideshow(threading.Thread):
         self.__fq = deque('', 10)
         self.__screen_on = True
 
-        logging.info('Slideshow initialization...')
+        logging.debug('Slideshow initialization...')
         pygame.init()
         pygame.mouse.set_visible(False)
         pygame.time.set_timer(self.__DISPLAYEVENT, int(config['seconds_per_image']) * 1000)
@@ -38,23 +38,23 @@ class Slideshow(threading.Thread):
 
 
     def next_image(self):
-        logging.info('Waiting for next image')
+        logging.debug('Waiting for next image')
         self.__rq.appendleft(self.current_image)
         try:
             self.current_image = self.__fq.popleft()
         except:
             self.current_image = self.__random_queue.get(True, 2)
-        logging.info('Got next image')
+        logging.debug('Got next image')
 
     def prev_image(self):
         try:
-            logging.info('Trying for prev image')
+            logging.debug('Trying for prev image')
             prev_image = self.__rq.popleft()
             self.__fq.appendleft(self.current_image)
             self.current_image = prev_image
-            logging.info('Got prev image')
+            logging.debug('Got prev image')
         except IndexError:
-            logging.info('No prev image')
+            logging.debug('No prev image')
 
     def toggle_screen(self):
         if (self.__screen_on):
@@ -110,6 +110,6 @@ class Slideshow(threading.Thread):
             self.__screen.blit(label, (1920 - label.get_width() - 10, 1080 - label.get_height() - 10))
 
             label = font.render(self.current_image.library_name, 1, (255, 255, 255))
-            self.__screen.blit(label, (0,0))
+            self.__screen.blit(label, (0, 0))
 
             pygame.display.flip()
