@@ -1,23 +1,16 @@
 import pickle
 import random
 import threading
-
-__author__ = "lbillon"
-__date__ = "$Jan 29, 2014 11:44:13 AM$"
+import logging
+import time
 
 import pygame
-import logging
+import exifread
+
+from imgss.image import Image
 
 
 class Loader(threading.Thread):
-    def __init__(self, config, q):
-        self.__queue = q
-        self.__config = config
-        self.__image_list = []
-        threading.Thread.__init__(self)
-        self.setDaemon(True)
-        self._load_library_file()
-
 
     def run(self):
         images = []
@@ -25,9 +18,9 @@ class Loader(threading.Thread):
         done = False
         while not done:
             image = self._pick_image()
-            path = image.get_full_path()
 
-            img = pygame.image.load(path)
+            self._extract_metadata(image)
+            img = pygame.image.load(image.get_full_path())
             (w, h) = img.get_size()
             ratio = w / float(h)
             nw = int(ratio * 1080)
@@ -36,22 +29,44 @@ class Loader(threading.Thread):
             surface = pygame.Surface((1920, 1080))
             surface.blit(img, (0, 0))
             image.surface = surface
-            self.__queue.put(image)
+            self._queue.put(image)
             logging.debug('Loader added surface')
 
+    def __init__(self, config, q):
+        self._queue = q
+        self._config = config
+        self._image_list = []
+        threading.Thread.__init__(self)
+        self.setDaemon(True)
+
+        self._load_library_file()
 
     def _load_library_file(self):
-        self.__image_library = pickle.load(open(self.__config['img_file_path'], "rb"))
-        self.__image_list = [image for lib in self.__image_library for image in lib.images]
-        print(self.__image_list)
-
+        self._image_library = pickle.load(
+            open(self._config['img_file_path'], "rb"))
+        self._image_list = [image for lib in self._image_library for image in
+                            lib.images]
 
     def _pick_image(self):
-        if not self.__image_list:
+        if not self._image_list:
             self._load_library_file()
 
-        image = random.choice(self.__image_list)
-        self.__image_list.remove(image)
+        image = random.choice(self._image_list)
+        self._image_list.remove(image)
 
         return image
+
+    def _extract_metadata(self, image:Image):
+        file = open(image.get_full_path(), 'rb')
+        tags = exifread.process_file(file, details=False,
+                                     stop_tag='EXIF DateTimeOriginal')
+        try:
+            image.timestamp = time.strptime(str(tags['EXIF DateTimeOriginal']),
+                                            "%Y:%m:%d %H:%M:%S")
+        except:
+            image.timestamp = 0
+            raise
+
+
+
 

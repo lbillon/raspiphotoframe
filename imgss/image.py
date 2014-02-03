@@ -4,7 +4,7 @@ class Image(object):
         self.library_name = ''
         self.surface = ''
         self.library = None
-        self.timestamp = ''
+        self.timestamp = None
 
     def __str__(self):
         return self.name
