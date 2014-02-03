@@ -1,4 +1,6 @@
 from configparser import ConfigParser
+import os
+import sys
 
 
 class Config(dict):
@@ -11,7 +13,7 @@ class Config(dict):
         dict.__init__(self)
 
     def write_config(self):
-        self.__parser.write(self.CONFIG_FILE)
+        self.__parser.write(sys.stdout)
 
     def _load_config(self):
         parser = self.__parser
