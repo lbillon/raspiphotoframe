@@ -126,8 +126,8 @@ class Slideshow(threading.Thread):
         font = pygame.font.SysFont("freesans", 30)
         image = self.current_image
 
-        text = image.library.name
-        if (image.library.name and image.timestamp):
+        text = image.library_name
+        if (image.library_name and image.timestamp):
             text += ", "
 
         text += strftime("%B %Y", image.timestamp)

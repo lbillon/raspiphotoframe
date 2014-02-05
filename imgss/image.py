@@ -3,11 +3,8 @@ class Image(object):
         self.name = name
         self.library_name = ''
         self.surface = ''
-        self.library = None
         self.timestamp = None
+        self.full_path = ''
 
     def __str__(self):
         return self.name
-
-    def get_full_path(self):
-        return "{}/{}".format(self.library.root, self.name)
