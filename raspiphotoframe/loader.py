@@ -7,7 +7,7 @@ import time
 import pygame
 import exifread
 
-from imgss.image import Image
+from raspiphotoframe.image import Image
 
 
 class Loader(threading.Thread):

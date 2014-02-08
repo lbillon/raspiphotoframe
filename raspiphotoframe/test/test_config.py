@@ -1,7 +1,7 @@
 __author__ = 'lbillon'
 
 import unittest
-from imgss.config import Config
+from raspiphotoframe.config import Config
 
 
 class MyTestCase(unittest.TestCase):

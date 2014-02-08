@@ -4,8 +4,8 @@ import sys
 
 
 class Config(dict):
-    CONFIG_FILE = '/etc/opt/imgss.conf'
-    DEFAULTS = {'seconds_per_image': 10, 'img_file_path': '/var/opt/imgss/images.txt'}
+    CONFIG_FILE = '/etc/opt/raspiphotoframe.conf'
+    DEFAULTS = {'seconds_per_image': 10, 'img_file_path': '/var/opt/raspiphotoframe/images.txt'}
 
     def __init__(self):
         self.__parser = ConfigParser(defaults=self.DEFAULTS)

@@ -1,4 +1,4 @@
-from imgss.image import Image
+from raspiphotoframe.image import Image
 
 
 class ImageLibrary(object):

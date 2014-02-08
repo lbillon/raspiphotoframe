@@ -2,7 +2,7 @@
 
 from distutils.core import setup
 
-setup(name='imgss',
+setup(name='raspiphotoframe',
       version='1.0',
-      py_modules=['imgss']
+      py_modules=['raspiphotoframe']
 )
