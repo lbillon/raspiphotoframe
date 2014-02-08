@@ -2,7 +2,7 @@ class Image(object):
     def __init__(self, name):
         self.name = name
         self.library_name = ''
-        self.surface = ''
+        self.surface = None
         self.timestamp = None
         self.full_path = ''
 

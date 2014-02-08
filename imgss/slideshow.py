@@ -31,7 +31,7 @@ class Slideshow(threading.Thread):
     def __init__(self, config, q):
         self._clock = pygame.time.Clock()
         self._DISPLAYEVENT = pygame.USEREVENT + 1
-        self._rq = deque('', 10)
+        self._rq = deque('', 3)
         self._fq = deque('', 10)
         self._screen_on = True
         self._continue = True
@@ -41,8 +41,8 @@ class Slideshow(threading.Thread):
         pygame.mouse.set_visible(False)
         pygame.time.set_timer(self._DISPLAYEVENT,
                               int(config['seconds_per_image']) * 1000)
-        self._screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-
+        # self._screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self._screen = pygame.display.set_mode((0, 0))
         pygame.event.set_allowed(None)
         pygame.event.set_allowed(
             [pygame.QUIT, pygame.KEYDOWN, pygame.USEREVENT])
@@ -54,7 +54,14 @@ class Slideshow(threading.Thread):
 
     def _next_image(self):
         logging.debug('Waiting for next image')
+
+        if len(self._rq) == self._rq.maxlen :
+            trash_image = self._rq.popleft()
+            trash_image.surface=None
+            logging.debug("Trash")
         self._rq.appendleft(self.current_image)
+
+
         try:
             self.current_image = self._fq.popleft()
         except:
@@ -117,20 +124,21 @@ class Slideshow(threading.Thread):
 
     def _blit_current_time(self):
         tim = strftime("%H:%M")
-        font = pygame.font.SysFont("freesans", 50)
+        font = pygame.font.SysFont("sans", 50)
         label = font.render(tim, 1, (255, 255, 255))
         self._screen.blit(label, (
             1920 - label.get_width() - 10, 1080 - label.get_height() - 10))
 
     def _blit_image_metadata(self):
-        font = pygame.font.SysFont("freesans", 30)
+        font = pygame.font.SysFont("sans", 30)
         image = self.current_image
 
         text = image.library_name
         if (image.library_name and image.timestamp):
             text += ", "
 
-        text += strftime("%B %Y", image.timestamp)
+        if (image.timestamp):
+            text += strftime("%B %Y", image.timestamp)
 
         label = font.render(text, 1, (255, 255, 255))
         self._screen.blit(label, (
