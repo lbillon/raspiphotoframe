@@ -21,13 +21,14 @@ class Loader(threading.Thread):
 
             self._extract_metadata(image)
             img = pygame.image.load(image.full_path)
-            (w, h) = img.get_size()
-            ratio = w / float(h)
-            nw = int(ratio * 1080)
-            img = pygame.transform.scale(img, (nw, 1080))
 
-            surface = pygame.Surface((1920, 1080))
-            surface.blit(img, (0, 0))
+            (w, h) = img.get_size()
+
+            if (w > h):
+                surface = self.create_surface_full_screen(img)
+            else:
+                surface = self.create_surface_fit(img)
+
             image.surface = surface
             self._queue.put(image)
             logging.debug('Loader added surface')
@@ -64,9 +65,26 @@ class Loader(threading.Thread):
             image.timestamp = time.strptime(str(tags['EXIF DateTimeOriginal']),
                                             "%Y:%m:%d %H:%M:%S")
         except:
-            image.timestamp = 0
-            raise
+            pass
 
+    def create_surface_full_screen(self, image:pygame.image):
+        (w, h) = image.get_size()
+        ratio = h / float(w)
+        nh = int(1920 * ratio)
+        offset = (nh - 1080) / 2
+        img = pygame.transform.scale(image, (1920, nh))
+        surface = pygame.Surface((1920, 1080))
+        surface.blit(img, (0, -int(offset)))
+        return surface
 
+    def create_surface_fit(self, image:pygame.image):
+        (w, h) = image.get_size()
+        ratio = w / float(h)
+        nw = int(ratio * 1080)
+        img = pygame.transform.scale(image, (nw, 1080))
+        offset = (1920 - nw) / 2
+        surface = pygame.Surface((1920, 1080))
+        surface.blit(img, (offset, 0))
+        return surface
 
 
