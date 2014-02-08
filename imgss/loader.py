@@ -20,7 +20,7 @@ class Loader(threading.Thread):
             image = self._pick_image()
 
             self._extract_metadata(image)
-            img = pygame.image.load(image.full_path)
+            img = pygame.image.load(image.get_full_path())
 
             (w, h) = img.get_size()
 
@@ -58,7 +58,7 @@ class Loader(threading.Thread):
         return image
 
     def _extract_metadata(self, image:Image):
-        file = open(image.full_path, 'rb')
+        file = open(image.get_full_path(), 'rb')
         tags = exifread.process_file(file, details=False,
                                      stop_tag='EXIF DateTimeOriginal')
         try:

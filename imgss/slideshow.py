@@ -55,12 +55,11 @@ class Slideshow(threading.Thread):
     def _next_image(self):
         logging.debug('Waiting for next image')
 
-        if len(self._rq) == self._rq.maxlen :
+        if len(self._rq) == self._rq.maxlen:
             trash_image = self._rq.popleft()
-            trash_image.surface=None
+            trash_image.surface = None
             logging.debug("Trash")
         self._rq.appendleft(self.current_image)
-
 
         try:
             self.current_image = self._fq.popleft()
@@ -133,8 +132,8 @@ class Slideshow(threading.Thread):
         font = pygame.font.SysFont("sans", 30)
         image = self.current_image
 
-        text = image.library_name
-        if (image.library_name and image.timestamp):
+        text = image.library.name
+        if (image.library.name and image.timestamp):
             text += ", "
 
         if (image.timestamp):

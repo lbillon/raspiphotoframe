@@ -9,8 +9,7 @@ class ImageLibrary(object):
 
     def add_image(self, image:Image):
         self.images.append(image)
-        image.library_name = self.name
-        image.full_path = "{}/{}".format(self.root, image.name)
+        image.library = self
 
     def __str__(self):
         return self.name
