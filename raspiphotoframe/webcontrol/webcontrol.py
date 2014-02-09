@@ -1,33 +1,33 @@
-from configparser import SafeConfigParser
 import threading
-import bottle
 import os
+
+import bottle
+
 from raspiphotoframe.slideshow import Slideshow
+
 from raspiphotoframe.config import Config
 
 
 class WebControl(threading.Thread):
     def run(self):
-
-        templates_dir=os.path.dirname(__file__)
-        webapp = _App(self._config,self._slideshow)
+        templates_dir = os.path.dirname(__file__)
+        webapp = _App(self._config, self._slideshow)
         bottle.route("/")(webapp.index)
         bottle.route("/prev")(webapp.prev)
         bottle.route("/next")(webapp.next)
         bottle.TEMPLATE_PATH.append(templates_dir)
-        bottle.run(host='localhost', port=9000)
+        bottle.run(host='0.0.0.0', port=9000)
 
-
-    def __init__(self,config :Config,slideshow:Slideshow):
+    def __init__(self, config:Config, slideshow:Slideshow):
         self._config = config
-        self._slideshow=slideshow
+        self._slideshow = slideshow
         threading.Thread.__init__(self)
 
 
 class _App(object):
-    def __init__(self,config :Config,slideshow:Slideshow):
+    def __init__(self, config:Config, slideshow:Slideshow):
         self._config = config
-        self._slideshow=slideshow
+        self._slideshow = slideshow
 
     def index(self):
         return bottle.template('index')

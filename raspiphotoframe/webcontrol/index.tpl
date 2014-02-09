@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>Raspi photoframe</title>
     <style>
         body{
         font-size:70px
         }
 
     </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
 <body>
 <a href='/prev'>&#9668;</a>
