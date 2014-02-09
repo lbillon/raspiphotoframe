@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 from queue import *
-import sys
-import os
 import logging
 from raspiphotoframe.config import Config
 from raspiphotoframe.loader import Loader
 from raspiphotoframe.slideshow import Slideshow
-
+from raspiphotoframe.webcontrol.webcontrol import WebControl
 
 q = Queue(10)
 config = Config()
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logging.debug('Started')
 
 logging.debug('Starting loader')
@@ -21,6 +19,11 @@ loader_object.start()
 logging.debug('Starting slideshow')
 ss = Slideshow(config,q)
 ss.start()
+
+logging.debug('Starting webcontrol')
+wc = WebControl(config,ss)
+wc.setDaemon(True)
+wc.start()
 
         
         

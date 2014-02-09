@@ -1,9 +1,5 @@
 import subprocess
 import threading
-
-__author__ = "lbillon"
-__date__ = "$Jan 29, 2014 11:44:13 AM$"
-
 from collections import deque
 import pygame
 import logging
@@ -49,7 +45,7 @@ class Slideshow(threading.Thread):
         self.current_image = self._random_queue.get(True, 2)
         threading.Thread.__init__(self)
 
-    def _next_image(self):
+    def next_image(self):
         logging.debug('Waiting for next image')
 
         if len(self._rq) == self._rq.maxlen:
@@ -64,7 +60,7 @@ class Slideshow(threading.Thread):
             self.current_image = self._random_queue.get(True, 2)
         logging.debug('Got next image')
 
-    def _prev_image(self):
+    def prev_image(self):
         try:
             logging.debug('Trying for prev image')
             prev_image = self._rq.popleft()
@@ -109,14 +105,14 @@ class Slideshow(threading.Thread):
                 if event.key == pygame.K_TAB:
                     self._continue = False
                 if event.key == pygame.K_RIGHT:
-                    self._next_image()
+                    self.next_image()
                 if event.key == pygame.K_LEFT:
-                    self._prev_image()
+                    self.prev_image()
                 if event.key == pygame.K_SPACE:
                     self._toggle_screen()
 
             elif (event.type == pygame.USEREVENT + 1):
-                self._next_image()
+                self.next_image()
 
     def _blit_current_time(self):
         tim = strftime("%H:%M")
