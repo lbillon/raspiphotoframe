@@ -34,6 +34,7 @@ try:
                 library.add_image(Image(i))
 
         image_libraries.append(library)
+        logging.info('Added library %s',library.name)
     pickle.dump(image_libraries, open(image_list_file, "wb") )
 
 

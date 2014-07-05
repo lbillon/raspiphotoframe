@@ -34,15 +34,16 @@ class Slideshow(threading.Thread):
         pygame.mouse.set_visible(False)
         pygame.time.set_timer(self._DISPLAYEVENT,
                               int(config['seconds_per_image']) * 1000)
-        # self._screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-        self._screen = pygame.display.set_mode((0, 0))
+        self._screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        #self._screen = pygame.display.set_mode((0, 0))
         pygame.event.set_allowed(None)
         pygame.event.set_allowed(
             [pygame.QUIT, pygame.KEYDOWN, pygame.USEREVENT])
 
         self._random_queue = q
+        logging.debug('Waiting for first image')
 
-        self.current_image = self._random_queue.get(True, 2)
+        self.current_image = self._random_queue.get(True, 20)
         threading.Thread.__init__(self)
 
     def next_image(self):
