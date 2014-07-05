@@ -58,7 +58,7 @@ class Slideshow(threading.Thread):
         try:
             self.current_image = self._fq.popleft()
         except:
-            self.current_image = self._random_queue.get(True, 2)
+            self.current_image = self._random_queue.get(True, 20)
         logging.debug('Got next image')
 
     def prev_image(self):
