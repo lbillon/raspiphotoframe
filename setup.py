@@ -5,5 +5,5 @@ from distutils.core import setup
 setup(name='raspiphotoframe',
       version='1.0',
       py_modules=['raspiphotoframe'],
-      scripts=['bin/raspiphotoframe-run','bin/raspiphotoframe-scan'],
-)
+      scripts=['bin/raspiphotoframe-run', 'bin/raspiphotoframe-scan',
+               'bin/raspi-screen'], )
